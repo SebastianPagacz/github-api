@@ -22,8 +22,6 @@ public class GitHubService{
     public record BranchDto(String name, String lastCommitSha) {}
     public record FinalRespone(String repoName, String ownerLogin, List<BranchDto> branches) {}
 
-    public record ErrorResponse(int status, String message) {}
-
     public List<FinalRespone> GetRepos(String username){
                     List<Repository> response = webClient.get()
             .uri("/users/{username}/repos", username)
