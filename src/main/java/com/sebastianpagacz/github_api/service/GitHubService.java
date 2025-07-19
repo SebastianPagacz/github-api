@@ -1,8 +1,14 @@
 package com.sebastianpagacz.github_api.service;
 
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.sebastianpagacz.github_api.exceptions.OwnerNotFoundException;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class GitHubService{
@@ -16,10 +22,15 @@ public class GitHubService{
     public record BranchDto(String name, String lastCommitSha) {}
     public record FinalRespone(String repoName, String ownerLogin, List<BranchDto> branches) {}
 
+    public record ErrorResponse(int status, String message) {}
+
     public List<FinalRespone> GetRepos(String username){
-        List<Repository> response = webClient.get()
+                    List<Repository> response = webClient.get()
             .uri("/users/{username}/repos", username)
             .retrieve()
+            .onStatus(HttpStatus.NOT_FOUND::equals, r->{
+                return Mono.error(new OwnerNotFoundException("User '%s' was not found".formatted(username)));
+            })
             .bodyToFlux(Repository.class)
             .collectList()
             .block();
