@@ -3,7 +3,8 @@ package com.sebastianpagacz.github_api.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sebastianpagacz.github_api.service.GitHubService;
-import com.sebastianpagacz.github_api.service.GitHubService.FinalRespone;
+import com.sebastianpagacz.github_api.service.GitHubService.FinalResponse;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class GitHubController {
     }
 
     @GetMapping("/repositories/{username}")
-    public List<FinalRespone> getMethodName(@PathVariable String username) {
+    public List<FinalResponse> getMethodName(@PathVariable String username) {
         return _gitHubService.GetRepos(username);
     }
     
